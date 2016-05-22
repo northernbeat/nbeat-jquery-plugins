@@ -1,0 +1,26 @@
+{
+    "nbeat": {
+        "gulp": "./node_modules/@eirikref/nbeat-gulp-tasks/tasks"
+    },
+
+    "gulp": {
+        "loadPlugins": {
+            "pattern": ["gulp-*",
+                        "gulp.",
+                        "debug",
+                        "del",
+                        "nano",
+                        "metalsmith-*"]
+        }
+    },
+
+    "build": {
+        "dest": "dist",
+        "js": [
+            {
+                "dest": "js/nbeat.js",
+                "src": ["src/*.js"]
+            }
+        ]
+    }
+}
