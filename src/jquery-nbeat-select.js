@@ -262,6 +262,7 @@
                 placeholder: this.select.attr("data-placeholder")
             })
                 .addClass(this.select.attr("class"))
+                .attr("required", this.select.attr("required"))
                 .val($.trim(selected ? selected.text() : ""))
                 .css({
                     visibility: "visible"
@@ -317,6 +318,15 @@
             this.registerInputEvents();
             this.registerDropdownEvents();
             this.registerButtonEvents();
+        },
+
+
+        
+        // FIXME
+        setPreselectedIcon: function() {
+            if (this.input.val() != '') {
+                this.setClearIcon();
+            } 
         },
 
 
@@ -748,6 +758,11 @@
             this.dropdownList.html(html);
             this.adjustMaxHeight();
             this.dropdown.show();
+
+            // eirikref
+            // this.visible = true;
+            // this.removeIcon();
+            // console.log("render");
         },
 
 
@@ -984,15 +999,6 @@
 
 
 
-        // FIXME
-        setPreselectedIcon: function() {
-            if (this.input.val() != '') {
-                this.setClearIcon();
-            } 
-        },
-
-
-        
         /**
          * Set arrow icon
          */
