@@ -226,7 +226,7 @@
         resetGrid: function()
         {
             this.removeSubMenu();
-            $(".list-item", self.grid).removeClass("is-selected is-selected-neighbour");
+            $(".list-item", this.grid).removeClass("is-selected is-selected-neighbour");
         },
 
 
@@ -239,16 +239,16 @@
             var pos      = this.items[this.subId];
             var startPos = Math.floor(pos / this.perline) * this.perline;
 
-            console.log("her");
-            $(".is-selected-neighbour", self.grid).removeClass("is-selected-neighbour");
-            console.log("der");
+            $(".is-selected-neighbour", this.grid).removeClass("is-selected-neighbour");
 
             for (var i = startPos; i <= startPos + (this.perline - 1); ++i) {
                 $(".list-item", this.grid).eq(i).addClass("is-selected-neighbour");
             }
 
             // var expPos = (Math.floor(parentPos/4) * 4) + 3;
-            $(".list-item", self.grid).removeClass("is-selected");
+            $(".list-item", this.grid).removeClass("is-selected");
+
+            // FIXME: Must not use ID directly. Fucks up self-contained things.
             $("#" + this.subId).removeClass("is-selected-neighbour");
             $("#" + this.subId).addClass("is-selected");
         },
@@ -276,7 +276,7 @@
         
         removeSubMenu: function()
         {
-            $(".expanded-category", self.grid).slideUp(function() {
+            $(".expanded-category", this.grid).slideUp(function() {
                 $(this).remove();
             });
         },
