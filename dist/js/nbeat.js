@@ -163,6 +163,318 @@
 }(jQuery));
 
 /**
+ * NBeat Grid Accordion 1.0
+ *
+ * NBeat Grid Accordion is a jQuery plugin that handles the behavior
+ * of a expandable/collapsable accordion menu/list laid out using a flexbox
+ * grid
+ *
+ * Copyright (c) 2016 Northern Beat
+ * Authors: Eirik Refsdal <eirik@nbeat.no>
+ *
+ */
+(function($) {
+
+    $.nbeatgridaccordion = function(grid, options) {
+        this.init(grid, options);
+    };
+
+
+
+    $.extend($.nbeatgridaccordion.prototype, {
+
+        /**
+         * @property {object} settings
+         *           Configuration settings
+         * @property {string} settings.cssClass
+         *           CSS classname for the element
+         */
+        settings: {
+            cssClass: "nbeatgridaccordion",
+            // formId: null,
+            
+            inputIdTransform: function(id)
+            {
+                return id + "-nbeatgridaccordion";
+            },
+
+            inputNameTransform: function(name)
+            {
+                return;
+            },
+        },
+
+        /**
+         * @property {boolean} debug
+         *           Turn on/off internal debugging to console
+         */
+        debug: false,
+
+        /**
+         * @property {jquery} grid
+         *           jQuery selector object for the grid
+         */
+        grid: null,
+
+        /**
+         * @property {jquery} items
+         *           Internal list of items
+         */
+        items: {},
+
+        /**
+         * @property {jquery} subId
+         *           #id of the currently used menu element
+         */
+        subId: 0,
+
+        /**
+         * @property {jquery} subPosition
+         *           Current position of the submenu
+         */
+        subPosition: 0,
+
+        /**
+         * @property {jquery} numitems
+         *           Size of this.items
+         */
+        numitems: 0,
+
+        /**
+         * @property {jquery} perline
+         *           Calculated number of items per line
+         */
+        perline: 1,
+        
+        /**
+         * @property {jquery} resizeTimer
+         *           Timer for the window.resize handling
+         */
+        resizeTimer: null,
+
+
+
+        /**
+         * Initialize the component
+         *
+         * @param {jQuery} input
+         *        jQuery selector for DOM element
+         * @param {Object} options
+         *        Object with configuration options
+         */
+        init: function(grid, options)
+        {
+            this.settings = $.extend({}, this.settings, options);
+            this.grid = $(grid);
+            this.buildItemList();
+            this.calculateItemsPerLine();
+            this.handleEvents();
+        },
+
+
+
+        buildItemList: function()
+        {
+            var self = this;
+            var i    = 0;
+            
+            this.grid.children().each(function() {
+                var id = $(this)[0]["id"];
+                self.items[id] = i;
+                ++i;
+            });
+
+            this.numitems = i;
+        },
+
+
+
+        calculateItemsPerLine: function()
+        {
+            var el         = $(".list-item", this.grid).first();
+            var elWidth    = el.width();
+            var gridWidth  = this.grid.width();
+            var percentage = Math.round((elWidth / gridWidth) * 100);
+            
+            if (percentage <= 21) {
+                this.perline = 5;
+            } else if (percentage <= 26) {
+                this.perline = 4;
+            } else if (percentage <= 34) {
+                this.perline = 3;
+            } else if (percentage <= 51) {
+                this.perline = 2;
+            } else {
+                this.perline = 1;
+            }
+
+            this.log("Calc items per line: " + this.perline);
+        },
+
+        
+        
+        /**
+         * Event handling
+         *
+         * The most important method in this whole plugin. Controls
+         * and decides how the dropdown list behaves, reacts to
+         * events, and so on.
+         */
+        handleEvents: function()
+        {
+            var self = this;
+
+            $(window).resize(function() {
+                clearTimeout(self.resizeTimer);
+                self.resizeTimer = setTimeout(function() {
+                    self.calculateItemsPerLine();
+                    self.repositionSubMenu();
+                }, 250);
+            });
+
+            $(".list-item", self.grid).on("click", function(e) {
+                if ($(this).hasClass("is-selected")) {
+                    self.resetGrid();
+                } else {
+                    self.subId = e.currentTarget.id;
+                    self.markSelected();
+                    self.insertSubMenu();
+                }
+            });
+        },
+
+
+        
+        calculateSubMenuPosition: function()
+        {
+            var pos        = this.items[this.subId];
+            var subPos     = 0;
+            var el         = $("#" + this.subId);
+
+            subPos = (Math.floor(pos / this.perline) * this.perline) + (this.perline - 1);
+
+            if (subPos >= this.numitems) {
+                subPos = this.numitems - 1;
+            }
+
+            return subPos;
+        },
+
+
+
+        repositionSubMenu: function()
+        {
+            if ($(".expanded-category", this.grid).length < 1) {
+                return;
+            }
+            
+            var newPos = this.calculateSubMenuPosition();
+            var el     = $(".expanded-category", this.grid);
+
+            this.log("Submenu position. Current: " + this.subPosition + ". New: " + newPos);
+            
+            if (newPos != this.subPosition) {
+                el.detach();
+                $(".list-item", this.grid).eq(newPos).after(el);
+                this.subPosition = newPos;
+            }
+
+            this.markSelected();
+        },
+
+        
+
+        /**
+         * 
+         */
+        resetGrid: function()
+        {
+            this.removeSubMenu();
+            $(".list-item", this.grid).removeClass("is-selected is-selected-neighbour");
+        },
+
+
+        
+        /**
+         * Mark selected menu item
+         */
+        markSelected: function()
+        {
+            var pos      = this.items[this.subId];
+            var startPos = Math.floor(pos / this.perline) * this.perline;
+
+            $(".is-selected-neighbour", this.grid).removeClass("is-selected-neighbour");
+
+            for (var i = startPos; i <= startPos + (this.perline - 1); ++i) {
+                $(".list-item", this.grid).eq(i).addClass("is-selected-neighbour");
+            }
+
+            // var expPos = (Math.floor(parentPos/4) * 4) + 3;
+            $(".list-item", this.grid).removeClass("is-selected");
+
+            // FIXME: Must not use ID directly. Fucks up self-contained things.
+            $("#" + this.subId).removeClass("is-selected-neighbour");
+            $("#" + this.subId).addClass("is-selected");
+        },
+
+
+        /**
+         * Insert/show expanded list
+         */
+        insertSubMenu: function()
+        {
+            var pos          = this.calculateSubMenuPosition(this.subId);
+            var child        = $('<div>').addClass("expanded-category");
+            var childContent = $('<ul>');
+            var origContent  = $("#" + this.subId + " .list-item-children").html();
+
+            this.removeSubMenu();
+            childContent.html(origContent);
+            child.append(childContent);
+            $(".list-item", this.grid).eq(pos).after(child);
+            child.slideDown();
+            this.subPosition = pos;
+        },
+
+
+        
+        removeSubMenu: function()
+        {
+            $(".expanded-category", this.grid).slideUp(function() {
+                $(this).remove();
+            });
+        },
+
+
+
+        /**
+         * Log debug messages
+         */
+        log: function(msg)
+        {
+            if (true === this.debug) {
+                console.log(msg);
+            }
+        }
+    });
+
+
+    
+    /**
+     * The exposed jQuery function
+     *
+     * @param {Object}
+     *        Object with configuration options
+     */    
+    $.fn.nbeatgridaccordion = function(options) {
+        this.each(function() {
+            $(this).data("nbeatgridaccordion", new $.nbeatgridaccordion(this, options));
+        });
+        return this;
+    };
+})(jQuery);
+
+/**
  * NbeatInput 1.0
  *
  * NbeatInput is a jQuery plugin that handles the behavior of our input
@@ -668,6 +980,170 @@
     };
 })(jQuery);
 
+/**
+ * NBeat Radio 1.0
+ *
+ * NBeat Radio is a simple jQuery plugin for handling events based on
+ * a radio button state.
+ *
+ * Copyright (c) 2016 Northern Beat
+ * Authors: Eirik Refsdal <eirik@nbeat.no>
+ */
+(function($) {
+
+    $.nbeatradio = function(radio, options) {
+        this.init(radio, options);
+    };
+
+
+
+    $.extend($.nbeatradio.prototype, {
+
+        /**
+         * @property {object} settings
+         *           Configuration settings
+         * @property {string} settings.cssClass
+         *           CSS classname for the element
+         */
+        settings: {
+            cssClass: "nbeatradio",
+            formId: null,
+            
+            inputIdTransform: function(id)
+            {
+                return id + "-nbeatradio";
+            },
+
+            inputNameTransform: function(name)
+            {
+                return;
+            },
+        },
+
+        /**
+         * @property {boolean} debug
+         *           Turn on/off internal debugging to console
+         */
+        debug: false,
+
+        /**
+         * @property {jquery} radio
+         *           jQuery selector object for the radio button
+         */
+        radio: null,
+
+        /**
+         * @property {jquery} name
+         *           Radio button group name
+         */
+        name: null,
+
+        /**
+         * @property {object} target
+         *           The togglable element
+         */
+        toggle: null,
+
+        /**
+         * @property {bool} toggleIsExpanded
+         *           Is the togglable element expanded?
+         */
+        toggleIsExpanded: false,
+
+
+        
+        /**
+         * Initialize the component
+         *
+         * @param {jQuery} input
+         *        jQuery selector for DOM element
+         * @param {Object} options
+         *        Object with configuration options
+         */
+        init: function(radio, options)
+        {
+            this.settings = $.extend({}, this.settings, options);
+            this.radio = $(radio);
+
+            if (!this.radio.attr("name")) {
+                console.log("Warning: Radio button is missing id attribute.");
+            }
+
+            if (this.radio.attr("name")) {
+                this.name = this.radio.attr("name");
+            } else {
+                console.log("Warning: Radio button is missing name attribute.");
+            }
+
+            if (this.radio.data("toggle")) {
+                this.toggle = $(this.radio.data("toggle"));
+            }
+
+            this.handleEvents();
+        },
+
+
+        
+        /**
+         * Event handling
+         *
+         * The most important method in this whole plugin. Controls
+         * and decides how the dropdown list behaves, reacts to
+         * events, and so on.
+         */
+        handleEvents: function()
+        {
+            var self = this;
+
+            $("input[name=" + this.name + "]:radio").on("change", function(event) {
+                var el = $("input[name=" + self.name + "]:checked").first();
+
+                if (el.attr("id") == self.radio.attr("id")) {
+                    self.expandToggleContent();
+                } else {
+                    self.collapseToggleContent();
+                }
+            });
+        },
+
+        expandToggleContent: function()
+        {
+            this.toggle.slideDown();
+        },
+
+        collapseToggleContent: function()
+        {
+            this.toggle.slideUp();
+        },
+
+
+        /**
+         * Log debug messages
+         */
+        log: function(msg)
+        {
+            if (true === this.debug) {
+                console.log(msg);
+            }
+        }
+    });
+
+
+    
+    /**
+     * The exposed jQuery function
+     *
+     * @param {Object}
+     *        Object with configuration options
+     */    
+    $.fn.nbeatradio = function(options) {
+        this.each(function() {
+            $(this).data("nbeatradio", new $.nbeatradio(this, options));
+        });
+        return this;
+    };
+})(jQuery);
+
 var NbeatSelectSorter = (function () {
     return {
         score: function (string, query)
@@ -955,6 +1431,7 @@ var NbeatSelectSorter = (function () {
                 placeholder: this.select.attr("data-placeholder")
             })
                 .addClass(this.select.attr("class"))
+                .attr("required", this.select.attr("required"))
                 .val($.trim(selected ? selected.text() : ""))
                 .css({
                     visibility: "visible"
@@ -1010,6 +1487,15 @@ var NbeatSelectSorter = (function () {
             this.registerInputEvents();
             this.registerDropdownEvents();
             this.registerButtonEvents();
+        },
+
+
+        
+        // FIXME
+        setPreselectedIcon: function() {
+            if (this.input.val() != '') {
+                this.setClearIcon();
+            } 
         },
 
 
@@ -1441,6 +1927,11 @@ var NbeatSelectSorter = (function () {
             this.dropdownList.html(html);
             this.adjustMaxHeight();
             this.dropdown.show();
+
+            // eirikref
+            // this.visible = true;
+            // this.removeIcon();
+            // console.log("render");
         },
 
 
@@ -1677,15 +2168,6 @@ var NbeatSelectSorter = (function () {
 
 
 
-        // FIXME
-        setPreselectedIcon: function() {
-            if (this.input.val() != '') {
-                this.setClearIcon();
-            } 
-        },
-
-
-        
         /**
          * Set arrow icon
          */
