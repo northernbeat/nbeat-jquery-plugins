@@ -937,7 +937,7 @@
             // Close the menu for clicks outside the menu
             $(document.body).on("click touchstart", function(event) {
 
-                console.log(event);
+                // console.log(event);
                 
                 if (self.isopen) {
                     var fDocument = false;
@@ -1251,48 +1251,71 @@
          */
         handleEvents: function()
         {
-            var self      = this;
-            var fIcon     = false;
+            var self       = this;
+            var fContainer = false;
+            var fInput     = false;
 
-            console.log("register events");
-            console.log(this.icon);
+            // console.log("kose kose events");
+            // console.log(this.icon);
             
-            // Handle clicks on the icon
-            this.icon.on("click touchstart", function(event) {
+            // Handle clicks on the collapsed container/icon
+            this.container.on("click touchstart focus", function(event) {
                 console.log("icon event");
-                if (!fIcon) {
-                    fIcon = true;
+                if (!fContainer) {
+                    fContainer = true;
                     setTimeout(function() {
-                        fIcon = false;
+                        fContainer = false;
                     }, 100);
                     
-                    self.container.toggleClass("expanded");
-                    console.log("toggle it");
+                    // console.log("toggle it");
                     if (self.isopen === false) {
+                        event.stopPropagation();
+                        self.container.addClass("expanded");
                         self.isopen = true;
-                    } else {
-                        self.isopen = true;
-                    }                        
+                        self.expand();
+
+                        return false;
+                    }              
                 }
                 
-                return false;
+                // return false;
             });
 
-            // Close the menu for clicks outside the menu
-            // $(document.body).on("click touchstart", function(event) {
-            //     if (self.isopen) {
-            //         var fDocument = false;
+            // Collapse when the input loses focus
+            this.input.on("focusout", function(event) {
+                // console.log("icon event");
+                if (!fInput) {
+                    fInput = true;
+                    setTimeout(function() {
+                        fInput = false;
+                    }, 100);
                     
-            //         if (!fDocument) {
-            //             fDocument = true;
-            //             setTimeout(function() {
-            //                 fDocument = false;
-            //             }, 100);
-                        
-            //             self.menu.removeClass("visible");
-            //         }
-            //     }
-            // });
+                    // console.log("toggle it");
+                    if (self.isopen === true) {
+                        self.container.removeClass("expanded");
+                        self.isopen = false;
+                        self.collapse();
+                        // } else {
+                        // self.isopen = false;
+                    }              
+                }
+                
+                // return false;
+            });
+
+        },
+
+
+        expand: function()
+        {
+            this.input.focus();
+            this.container.removeAttr("tabindex");
+        },
+
+
+        collapse: function()
+        {
+            this.container.attr("tabindex", 0);
         },
 
 
@@ -1303,7 +1326,7 @@
         log: function(msg)
         {
             if (true === this.debug) {
-                console.log(msg);
+                // console.log(msg);
             }
         }
     });

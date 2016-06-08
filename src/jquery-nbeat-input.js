@@ -175,7 +175,7 @@
                     self.input.removeClass(self.settings.fillClass);
                 } else {
                     self.setClearIcon();
-                    console.log("set class");
+                    // console.log("set class");
                     self.input.addClass(self.settings.fillClass);
                     // self.input.addClass("faen");
                     // console.log(self.settings);

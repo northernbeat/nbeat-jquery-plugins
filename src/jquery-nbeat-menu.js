@@ -53,7 +53,7 @@
 
         /**
          * @property {object} button
-         *           Clickabe menu button
+         *           Clickable menu button
          */
         button: null,
 
@@ -124,23 +124,26 @@
             });
 
             // Handle clicks on menu links
-            this.menu.on("click touchstart", function(event) {
-                var fMenu = false;
+            // this.menu.on("click touchstart", function(event) {
+            //     var fMenu = false;
                 
-                if (!fMenu) {
-                    fMenu = true;
-                    setTimeout(function() {
-                        fMenu = false;
-                    }, 100);
+            //     if (!fMenu) {
+            //         fMenu = true;
+            //         setTimeout(function() {
+            //             fMenu = false;
+            //         }, 100);
 
-                    // console.log("click on menu");
-                }
+            //         console.log("click on menu");
+            //     }
 
-                event.stopPropagation();
-            });
+            //     event.stopPropagation();
+            // });
 
             // Close the menu for clicks outside the menu
             $(document.body).on("click touchstart", function(event) {
+
+                // console.log(event);
+                
                 if (self.isopen) {
                     var fDocument = false;
                     
