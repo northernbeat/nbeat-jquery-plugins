@@ -70,6 +70,12 @@
         icon: null,
 
         /**
+         * @property {object} input
+         *           The input field
+         */
+        form: null,
+
+        /**
          * @property {bool} isopen
          *           Is the menu open?
          */
@@ -92,6 +98,7 @@
             this.submit = $(".menu-search-submit", this.container)
             this.input = $(".menu-search-input", this.container)
             this.icon = $(".menu-search-icon", this.container)
+            this.form = $("form", this.container)
             this.handleEvents();
         },
 
@@ -105,10 +112,8 @@
             var self       = this;
             var fContainer = false;
             var fInput     = false;
+            var fSubmit    = false;
 
-            // console.log("kose kose events");
-            // console.log(this.icon);
-            
             // Handle clicks on the collapsed container/icon
             this.container.on("click touchstart focus", function(event) {
                 // console.log("icon event");
@@ -134,18 +139,26 @@
 
             // Collapse when the input loses focus
             this.input.on("focusout", function(event) {
-                // console.log("icon event");
+                var target = event.relatedTarget;
+                
                 if (!fInput) {
                     fInput = true;
                     setTimeout(function() {
                         fInput = false;
                     }, 100);
+
+                    // FIXME: Hack for now to handle clicks on submit button when expanded
+                    if (target && target.className && "menu-search-submit" === target.className) {
+                        this.form.submit();
+                        return;
+                    }
                     
                     // console.log("toggle it");
                     if (self.isopen === true) {
                         self.container.removeClass("expanded");
                         self.isopen = false;
                         self.collapse();
+                        console.log(event);
                         // } else {
                         // self.isopen = false;
                     }              
@@ -153,7 +166,6 @@
                 
                 // return false;
             });
-
         },
 
 
