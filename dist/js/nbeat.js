@@ -1263,14 +1263,12 @@
 
             // Handle clicks on the collapsed container/icon
             this.container.on("click touchstart focus", function(event) {
-                // console.log("icon event");
                 if (!fContainer) {
                     fContainer = true;
                     setTimeout(function() {
                         fContainer = false;
                     }, 100);
                     
-                    // console.log("toggle it");
                     if (self.isopen === false) {
                         event.stopPropagation();
                         self.container.addClass("expanded");
@@ -1280,8 +1278,6 @@
                         return false;
                     }              
                 }
-                
-                // return false;
             });
 
             // Collapse when the input loses focus
@@ -1294,51 +1290,19 @@
                         fInput = false;
                     }, 100);
 
+                    // FIXME: Hack for now to handle clicks on submit button when expanded
                     if (target && target.className && "menu-search-submit" === target.className) {
                         this.form.submit();
                         return;
                     }
                     
-                    // console.log("toggle it");
                     if (self.isopen === true) {
                         self.container.removeClass("expanded");
                         self.isopen = false;
                         self.collapse();
-                        console.log(event);
-                        // } else {
-                        // self.isopen = false;
                     }              
                 }
-                
-                // return false;
             });
-
-            // // Handle clicks on the submit button when expanded
-            // this.submit.on("click touchstart focus", function(event) {
-            //     // console.log("submit click");
-            //     event.stopPropagation();
-
-            //     if (!fSubmit) {
-            //         // console.log("1");
-            //         fSubmit = true;
-            //         setTimeout(function() {
-            //             fSubmit = false;
-            //         }, 100);
-
-            //         // console.log("status: " + self.isopen);
-            //         // console.log(self.isopen);
-                    
-            //         if (self.container.hasClass("expanded")) {
-            //             // console.log("2");
-            //             // console.log("submit form");
-            //             self.form.submit();
-            //         }              
-            //     }
-                
-            //     // console.log("3");
-            //     return false;
-            // });
-
         },
 
 
