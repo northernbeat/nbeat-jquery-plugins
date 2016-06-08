@@ -116,14 +116,12 @@
 
             // Handle clicks on the collapsed container/icon
             this.container.on("click touchstart focus", function(event) {
-                // console.log("icon event");
                 if (!fContainer) {
                     fContainer = true;
                     setTimeout(function() {
                         fContainer = false;
                     }, 100);
                     
-                    // console.log("toggle it");
                     if (self.isopen === false) {
                         event.stopPropagation();
                         self.container.addClass("expanded");
@@ -133,8 +131,6 @@
                         return false;
                     }              
                 }
-                
-                // return false;
             });
 
             // Collapse when the input loses focus
@@ -153,18 +149,12 @@
                         return;
                     }
                     
-                    // console.log("toggle it");
                     if (self.isopen === true) {
                         self.container.removeClass("expanded");
                         self.isopen = false;
                         self.collapse();
-                        console.log(event);
-                        // } else {
-                        // self.isopen = false;
                     }              
                 }
-                
-                // return false;
             });
         },
 
