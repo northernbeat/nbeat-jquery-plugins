@@ -124,20 +124,18 @@
             });
 
             // Handle clicks on menu links
-            // this.menu.on("click touchstart", function(event) {
-            //     var fMenu = false;
+            $("a", this.menu).on("click touchstart", function(event) {
+                var fMenu = false;
                 
-            //     if (!fMenu) {
-            //         fMenu = true;
-            //         setTimeout(function() {
-            //             fMenu = false;
-            //         }, 100);
+                if (!fMenu) {
+                    fMenu = true;
+                    setTimeout(function() {
+                        fMenu = false;
+                    }, 100);
+                }
 
-            //         console.log("click on menu");
-            //     }
-
-            //     event.stopPropagation();
-            // });
+                event.stopPropagation();
+            });
 
             // Close the menu for clicks outside the menu
             $(document.body).on("click touchstart", function(event) {

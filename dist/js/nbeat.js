@@ -651,7 +651,7 @@
                     self.input.removeClass(self.settings.fillClass);
                 } else {
                     self.setClearIcon();
-                    console.log("set class");
+                    // console.log("set class");
                     self.input.addClass(self.settings.fillClass);
                     // self.input.addClass("faen");
                     // console.log(self.settings);
@@ -918,21 +918,23 @@
                 return false;
             });
 
+            console.log("oh yeah");
+            
             // Handle clicks on menu links
-            // this.menu.on("click touchstart", function(event) {
-            //     var fMenu = false;
+            $("a", this.menu).on("click touchstart", function(event) {
+                var fMenu = false;
                 
-            //     if (!fMenu) {
-            //         fMenu = true;
-            //         setTimeout(function() {
-            //             fMenu = false;
-            //         }, 100);
+                if (!fMenu) {
+                    fMenu = true;
+                    setTimeout(function() {
+                        fMenu = false;
+                    }, 100);
 
-            //         console.log("click on menu");
-            //     }
+                    console.log("click on menu");
+                }
 
-            //     event.stopPropagation();
-            // });
+                event.stopPropagation();
+            });
 
             // Close the menu for clicks outside the menu
             $(document.body).on("click touchstart", function(event) {
@@ -1260,7 +1262,7 @@
             
             // Handle clicks on the collapsed container/icon
             this.container.on("click touchstart focus", function(event) {
-                console.log("icon event");
+                // console.log("icon event");
                 if (!fContainer) {
                     fContainer = true;
                     setTimeout(function() {
