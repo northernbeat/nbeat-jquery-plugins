@@ -124,8 +124,6 @@
                     
                     if (self.isopen === false) {
                         event.stopPropagation();
-                        self.container.addClass("expanded");
-                        self.isopen = true;
                         self.expand();
 
                         return false;
@@ -150,8 +148,6 @@
                     }
                     
                     if (self.isopen === true) {
-                        self.container.removeClass("expanded");
-                        self.isopen = false;
                         self.collapse();
                     }              
                 }
@@ -161,6 +157,8 @@
 
         expand: function()
         {
+            this.container.addClass("expanded");
+            this.isopen = true;
             this.input.focus();
             this.container.removeAttr("tabindex");
         },
@@ -168,6 +166,8 @@
 
         collapse: function()
         {
+            this.container.removeClass("expanded");
+            this.isopen = false;
             this.container.attr("tabindex", 0);
         },
 
