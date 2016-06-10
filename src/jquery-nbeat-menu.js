@@ -138,23 +138,21 @@
             });
 
             // Close the menu for clicks outside the menu
-            $(document.body).on("click touchstart", function(event) {
-
-                // console.log(event);
+            // $(document.body).on("click touchstart", function(event) {
                 
-                if (self.isopen) {
-                    var fDocument = false;
+            //     if (self.isopen) {
+            //         var fDocument = false;
                     
-                    if (!fDocument) {
-                        fDocument = true;
-                        setTimeout(function() {
-                            fDocument = false;
-                        }, 100);
+            //         if (!fDocument) {
+            //             fDocument = true;
+            //             setTimeout(function() {
+            //                 fDocument = false;
+            //             }, 100);
                         
-                        self.menu.removeClass("visible");
-                    }
-                }
-            });
+            //             self.menu.removeClass("visible");
+            //         }
+            //     }
+            // });
         },
 
 
