@@ -270,7 +270,7 @@
             
             this.icon = $('<span>').attr({
                 id: this.settings.inputIdTransform(this.select.attr("id")) + "-icon"
-            }).addClass("icon icon-arrow-down");
+            }).addClass("icon icon-expand");
 
             this.button = $('<div>').attr({
                 id: this.settings.inputIdTransform(this.select.attr("id")) + "-button",
@@ -611,13 +611,13 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                if (self.icon.hasClass("icon-close")) {
+                if (self.icon.hasClass("icon-remove")) {
                     self.fullReset();
                     self.input.focus();
                     self.markSelected(0);
                     self.pickSelected();
                     self.submit();
-                } else if (self.icon.hasClass("icon-arrow-down")) {
+                } else if (self.icon.hasClass("icon-expand")) {
                     self.focus();
                     self.dropdown.show();
                 }
@@ -994,7 +994,7 @@
          */
         removeIcon: function()
         {
-            this.icon.removeClass("icon-arrow-down icon-close");
+            this.icon.removeClass("icon-expand icon-remove");
         },
 
 
@@ -1004,7 +1004,7 @@
          */
         setDefaultIcon: function()
         {
-            this.icon.removeClass("icon-close").addClass("icon-arrow-down");
+            this.icon.removeClass("icon-remove").addClass("icon-expand");
         },
 
 
@@ -1014,7 +1014,7 @@
          */
         setClearIcon: function()
         {
-            this.icon.removeClass("icon-arrow-down").addClass("icon-close");
+            this.icon.removeClass("icon-expand").addClass("icon-remove");
         },
 
 
