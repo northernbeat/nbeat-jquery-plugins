@@ -4,7 +4,7 @@
  * NBeat Menu is a jQuery plugin that handles the behavior of the main
  * menu usually drawn up by our designers.
  *
- * Copyright (c) 2016 Nova Consulting Group
+ * Copyright (c) 2016 Northern Beat
  * Authors: Eirik Refsdal <eirik@nbeat.no>
  *
  */
@@ -30,7 +30,7 @@
             
             inputIdTransform: function(id)
             {
-                return id + "_nbeatmenu";
+                return id + "-nbeatmenu";
             },
 
             inputNameTransform: function(name)
