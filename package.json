@@ -1,6 +1,6 @@
 {
   "name": "@eirikref/nbeat-js",
-  "version": "1.0.8",
+  "version": "1.0.11",
   "description": "jQuery plugins for commonly used things in nbeat projects",
   "repository": {
     "type": "git",

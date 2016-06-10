@@ -933,23 +933,21 @@
             });
 
             // Close the menu for clicks outside the menu
-            $(document.body).on("click touchstart", function(event) {
-
-                // console.log(event);
+            // $(document.body).on("click touchstart", function(event) {
                 
-                if (self.isopen) {
-                    var fDocument = false;
+            //     if (self.isopen) {
+            //         var fDocument = false;
                     
-                    if (!fDocument) {
-                        fDocument = true;
-                        setTimeout(function() {
-                            fDocument = false;
-                        }, 100);
+            //         if (!fDocument) {
+            //             fDocument = true;
+            //             setTimeout(function() {
+            //                 fDocument = false;
+            //             }, 100);
                         
-                        self.menu.removeClass("visible");
-                    }
-                }
-            });
+            //             self.menu.removeClass("visible");
+            //         }
+            //     }
+            // });
         },
 
 
@@ -1271,8 +1269,6 @@
                     
                     if (self.isopen === false) {
                         event.stopPropagation();
-                        self.container.addClass("expanded");
-                        self.isopen = true;
                         self.expand();
 
                         return false;
@@ -1297,8 +1293,6 @@
                     }
                     
                     if (self.isopen === true) {
-                        self.container.removeClass("expanded");
-                        self.isopen = false;
                         self.collapse();
                     }              
                 }
@@ -1308,6 +1302,8 @@
 
         expand: function()
         {
+            this.container.addClass("expanded");
+            this.isopen = true;
             this.input.focus();
             this.container.removeAttr("tabindex");
         },
@@ -1315,6 +1311,8 @@
 
         collapse: function()
         {
+            this.container.removeClass("expanded");
+            this.isopen = false;
             this.container.attr("tabindex", 0);
         },
 
@@ -1642,7 +1640,7 @@ var NbeatSelectSorter = (function () {
             
             this.icon = $('<span>').attr({
                 id: this.settings.inputIdTransform(this.select.attr("id")) + "-icon"
-            }).addClass("icon icon-arrow-down");
+            }).addClass("icon icon-expand");
 
             this.button = $('<div>').attr({
                 id: this.settings.inputIdTransform(this.select.attr("id")) + "-button",
@@ -1983,13 +1981,13 @@ var NbeatSelectSorter = (function () {
                 e.preventDefault();
                 e.stopPropagation();
 
-                if (self.icon.hasClass("icon-close")) {
+                if (self.icon.hasClass("icon-remove")) {
                     self.fullReset();
                     self.input.focus();
                     self.markSelected(0);
                     self.pickSelected();
                     self.submit();
-                } else if (self.icon.hasClass("icon-arrow-down")) {
+                } else if (self.icon.hasClass("icon-expand")) {
                     self.focus();
                     self.dropdown.show();
                 }
@@ -2366,7 +2364,7 @@ var NbeatSelectSorter = (function () {
          */
         removeIcon: function()
         {
-            this.icon.removeClass("icon-arrow-down icon-close");
+            this.icon.removeClass("icon-expand icon-remove");
         },
 
 
@@ -2376,7 +2374,7 @@ var NbeatSelectSorter = (function () {
          */
         setDefaultIcon: function()
         {
-            this.icon.removeClass("icon-close").addClass("icon-arrow-down");
+            this.icon.removeClass("icon-remove").addClass("icon-expand");
         },
 
 
@@ -2386,7 +2384,7 @@ var NbeatSelectSorter = (function () {
          */
         setClearIcon: function()
         {
-            this.icon.removeClass("icon-arrow-down").addClass("icon-close");
+            this.icon.removeClass("icon-expand").addClass("icon-remove");
         },
 
 
