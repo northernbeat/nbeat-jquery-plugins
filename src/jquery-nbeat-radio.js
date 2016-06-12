@@ -83,7 +83,7 @@
             this.settings = $.extend({}, this.settings, options);
             this.radio = $(radio);
 
-            if (!this.radio.attr("name")) {
+            if (!this.radio.attr("id")) {
                 console.log("Warning: Radio button is missing id attribute.");
             }
 
