@@ -330,6 +330,7 @@
 
     $.nbeatgridaccordion = function(grid, options) {
         this.init(grid, options);
+        console.log("init");
     };
 
 
@@ -441,6 +442,17 @@
         },
 
 
+        realWidth: function(obj)
+        {
+            var clone = obj.clone();
+            clone.css("visibility", "hidden");
+            $("body").append(clone);
+            var width = clone.outerWidth();
+            clone.remove();
+            return width;
+        },
+
+
 
         calculateItemsPerLine: function()
         {
@@ -448,6 +460,13 @@
             var elWidth    = el.width();
             var gridWidth  = this.grid.width();
             var percentage = Math.round((elWidth / gridWidth) * 100);
+
+            this.log("Real Calc, el: " + this.realWidth(el));
+            this.log("Real Calc, elWidth: " + this.realWidth(this.grid));
+            this.log("Calc, el: " + el);
+            this.log("Calc, elWidth: " + elWidth);
+            this.log("Calc, gridWidth: " + gridWidth);
+            this.log("Calc, percentage: " + percentage);
             
             if (percentage <= 21) {
                 this.perline = 5;
@@ -486,6 +505,12 @@
             });
 
             $(".list-item", self.grid).on("click", function(e) {
+
+                // Currently calculate each time, as a workaround for
+                // handling grids that are hidden when initiated,
+                // which would couse items per line to be 1.
+                self.calculateItemsPerLine();
+
                 if ($(this).hasClass("is-selected")) {
                     self.resetGrid();
                 } else {
