@@ -2895,3 +2895,133 @@ var NbeatSelectSorter = (function () {
     };
 
 })(jQuery, window, document);
+
+!function(t,e,i,s){"use strict";let n="nbeatToc",a={targetEl:"#nbeatToc",selector:"h1, h2",itemClass:"toc__item"};function c(e,i){this.element=t(e),this.config=t.extend({},a,i),this._defaults=a,this._name=n,this.debug=!0,this.list=[],this.parseDataConfig(),this.init()}t.extend(c.prototype,{init:function(){this.parseSource(),this.renderList(),1==this.debug&&console.log(this)},parseDataConfig:function(){this.element.attr("data-toc-selector")&&(this.config.selector=this.element.attr("data-toc-selector")),this.element.attr("data-toc-itemclass")&&(this.config.itemClass=this.element.attr("data-toc-itemclass"))},parseSource:function(){let e=this;t(this.config.selector,this.element).each(function(){var i,s,n=t(this),a=(i=t("a",n).length>0?t("a",n).first():n).text();i.attr("name")?s=i.attr("name"):i.attr("id")?s=i.attr("id"):(s=e.createId(a),n.attr("id",s)),e.list.push({id:s,title:a})})},renderList:function(){let e=t(this.config.targetEl),i=this;e.empty(),t.each(this.list,function(t,s){e.append('<li class="'+i.config.itemClass+'"><a href="#'+s.id+'">'+s.title+"</a></li>")})},createId:function(t){let e=t;return e=(e=(e=e.replace(/(\W)+/g," ")).trim()).replace(/\W/g,"_")}}),t.fn[n]=function(e){return this.each(function(){t.data(this,"plugin_"+n)||t.data(this,"plugin_"+n,new c(this,e))})}}(jQuery,window,document);
+;(function($, window, document, undefined)
+{
+
+    "use strict";
+
+    let pluginName = "nbeatToc";
+    let defaults   = {
+        targetEl: "#nbeatToc",
+        selector: "h1, h2",
+        itemClass: "toc__item"
+    };
+
+
+
+    function nbeatToc(element, options)
+    {
+        this.element   = $(element);
+        this.config    = $.extend({}, defaults, options);
+        this._defaults = defaults;
+        this._name     = pluginName;
+        this.debug     = true;
+        this.list      = [];
+
+        this.parseDataConfig();
+        this.init();
+    }
+
+
+
+    $.extend(nbeatToc.prototype, {
+
+        init: function()
+        {
+            this.parseSource();
+            this.renderList();
+
+            if (this.debug == true) {
+                console.log(this);
+            }
+        },
+
+
+
+        parseDataConfig: function()
+        {
+            if (this.element.attr("data-toc-selector")) {
+                this.config.selector = this.element.attr("data-toc-selector");
+            }
+
+            if (this.element.attr("data-toc-itemclass")) {
+                this.config.itemClass = this.element.attr("data-toc-itemclass");
+            }
+        },
+
+
+
+        parseSource: function()
+        {
+            let self = this;
+
+            $(this.config.selector, this.element).each(function() {
+                var el, id, title;
+                var hel = $(this);
+
+                if ($("a", hel).length > 0) {
+                    el = $("a", hel).first();
+                } else {
+                    el = hel;
+                }
+
+                var title = el.text();
+                var id;
+
+                if (el.attr("name")) {
+                    id = el.attr("name");
+                } else if (el.attr("id")) {
+                    id = el.attr("id");
+                } else {
+                    id = self.createId(title);
+                    hel.attr("id", id);
+                }
+
+                self.list.push({id: id, title: title});
+            });
+        },
+
+
+
+        renderList: function()
+        {
+            let targetEl = $(this.config.targetEl);
+            let self     = this;
+
+            targetEl.empty();
+
+            $.each(this.list, function(i, obj) {
+                targetEl.append('<li class="' + self.config.itemClass +
+                                '"><a href="#' + obj.id + '">' + obj.title + '</a></li>');
+            });
+        },
+
+
+
+        createId: function(input)
+        {
+            let cleaned = input;
+
+            cleaned = cleaned.replace(/(\W)+/g, " ");
+            cleaned = cleaned.trim();
+            cleaned = cleaned.replace(/\W/g, "_");
+
+            return cleaned;
+        }
+
+    });
+
+
+
+    $.fn[pluginName] = function(options)
+    {
+        return this.each(function() {
+            if (!$.data(this, "plugin_" + pluginName)) {
+                $.data(this, "plugin_" + pluginName, new nbeatToc(this, options));
+            }
+        });
+    };
+
+})(jQuery, window, document);
