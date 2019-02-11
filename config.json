@@ -1,0 +1,12 @@
+{
+    "system": {
+        "dest": "dist/"
+    },
+
+    "build": {
+        "jquery": {
+            "src":  "src/**/*.js",
+            "dest": "jquery.nbeat.js"
+        }
+    }
+}
