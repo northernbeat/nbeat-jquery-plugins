@@ -20,6 +20,7 @@ This package contains a set of commonly used jQuery plugins for nbeat projects.
 - **jquery.nbeat.select** - 
 - **jquery.nbeat.select-sorter** - 
 - **jquery.nbeat.specialnumber** - 
+- **jquery.nbeat.toc** - Simple Table-of-Contents generator
 
 
 ## TODO
